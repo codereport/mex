@@ -17,15 +17,19 @@ endif()
 
 # ------------------------------------------------------------------------------
 
-project(ftxui-starter
-  LANGUAGES CXX
+project(mex
+  LANGUAGES CXX CUDA
   VERSION 1.0.0
 )
 
-add_executable(ftxui-starter src/main.cpp)
-target_include_directories(ftxui-starter PRIVATE src)
+if (NOT CMAKE_CUDA_COMPILER)
+    set(CMAKE_CUDA_COMPILER "/usr/bin/nvcc")
+endif()
 
-target_link_libraries(ftxui-starter
+add_executable(mex src/main.cpp)
+target_include_directories(mex PRIVATE src)
+
+target_link_libraries(mex
   PRIVATE ftxui::screen
   PRIVATE ftxui::dom
   PRIVATE ftxui::component # Not needed for this example.

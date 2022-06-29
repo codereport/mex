@@ -28,7 +28,7 @@ int main(void) {
       });
 
   // Limit the size of the document to 80 char.
-  document = document | size(WIDTH, LESS_THAN, 80);
+  // document = document | size(WIDTH, LESS_THAN, 80);
 
   auto screen = Screen::Create(Dimension::Full(), Dimension::Fit(document));
   Render(screen, document);
