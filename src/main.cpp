@@ -1,39 +1,65 @@
-#include <iostream>
 
-#include "ftxui/dom/elements.hpp"
-#include "ftxui/screen/screen.hpp"
-#include "ftxui/screen/string.hpp"
+#include <memory>  // for allocator, __shared_ptr_access
+#include <string>  // for char_traits, operator+, string, basic_string
+#include <optional>
 
-int main(void) {
+#include "ftxui/component/captured_mouse.hpp"  // for ftxui
+#include "ftxui/component/component.hpp"       // for Input, Renderer, Vertical
+#include "ftxui/component/component_base.hpp"  // for ComponentBase
+#include "ftxui/component/component_options.hpp"  // for InputOption
+#include "ftxui/component/screen_interactive.hpp"  // for Component, ScreenInteractive
+#include "ftxui/dom/elements.hpp"  // for text, hbox, separator, Element, operator|, vbox, border
+#include "ftxui/util/ref.hpp"  // for Ref
+
+using namespace std::string_literals;
+
+int main(int argc, const char* argv[]) {
   using namespace ftxui;
 
-  auto summary = [&] {
-    auto content = vbox({
-        hbox({text(L"- done:   "), text(L"3") | bold}) | color(Color::Green),
-        hbox({text(L"- active: "), text(L"2") | bold}) | color(Color::RedLight),
-        hbox({text(L"- queue:  "), text(L"9") | bold}) | color(Color::Red),
-    });
-    return window(text(L" Summary "), content);
+  std::string expression;
+
+  Component input = Input(&expression, "Enter expression...");
+
+  auto component = Container::Vertical({input});
+
+  auto trace_window = [&] {
+    auto content = hbox({text(" TODO"s)});
+    return window(text(L" Trace "), content);
   };
 
-  auto document =  //
-      vbox({
-          hbox({
-              summary(),
-              summary(),
-              summary() | flex,
-          }),
-          summary(),
-          summary(),
-      });
+  auto train_tree_window = [&] {
+    auto const blank_line = text("\n"s);
+    auto content = vbox({
+        text(" TODO"s),
+        blank_line,
+        blank_line,
+        blank_line,
+        blank_line,
+        blank_line,
+        blank_line,
+        blank_line,
+        blank_line,
+        blank_line,
+    });
+    return window(text(L" Train Tree "), content);
+  };
 
-  // Limit the size of the document to 80 char.
-  // document = document | size(WIDTH, LESS_THAN, 80);
+  auto renderer = Renderer(component, [&] {
+    return vbox(
+        {vbox({
+             hbox({hbox(text(" "), input->Render()) | flex,
+                   text(" M") | bold | color(Color::RGB(194, 52, 60)),
+                   text("e") | bold | color(Color::RGB(190, 45, 125)),
+                   text("X ") | bold | color(Color::RGB(220, 153, 50))}),
+             separator(),
+             text(" translation"),
+         }) | border,
+         hbox({
+             trace_window() | flex,
+             train_tree_window() | flex,
+         })});
+  });
 
-  auto screen = Screen::Create(Dimension::Full(), Dimension::Fit(document));
-  Render(screen, document);
-
-  std::cout << screen.ToString() << '\0' << std::endl;
-
-  return EXIT_SUCCESS;
+  auto screen = ScreenInteractive::TerminalOutput();
+  screen.Loop(renderer);
 }
