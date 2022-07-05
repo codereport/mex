@@ -14,26 +14,9 @@
 
 #include "utf8.h"
 
+#include <translate.hpp>
+
 using namespace std::string_literals;
-
-auto to_english = std::unordered_map<wchar_t, std::string>{
-  {L'⍳',  "iota"s}, 
-  {L'/',  "fold"s},
-  {L'\\', "scan"s},
-  {L'⌈',  "max"s},
-  {L'⊢',  "id"s}};
-
-auto translate(std::string expr) -> std::string {
-  auto u16 = utf8::utf8to16(expr);
-  std::string ret = " ";
-  for (auto c : u16) {
-    ret += to_english.find(c) != to_english.end()
-               ? to_english[c]
-               : std::string{static_cast<char>(c)};
-    ret += ' ';
-  }
-  return ret;
-}
 
 int main(int argc, const char* argv[]) {
   using namespace ftxui;
@@ -68,14 +51,21 @@ int main(int argc, const char* argv[]) {
 
   auto renderer = Renderer(component, [&] {
     return vbox(
-        {vbox({
-             hbox({hbox(text(" "), input->Render()) | flex,
-                   text(" M") | bold | color(Color::RGB(194, 52, 60)),
-                   text("e") | bold | color(Color::RGB(190, 45, 125)),
-                   text("X ") | bold | color(Color::RGB(220, 153, 50))}),
-             separator(),
-             text(translate(expression)),
-         }) | border,
+        {vbox({hbox({hbox(text(" "), input->Render()) | flex,
+                     text(" M") | bold | color(Color::RGB(194, 52, 60)),
+                     text("e") | bold | color(Color::RGB(190, 45, 125)),
+                     text("X ") | bold | color(Color::RGB(220, 153, 50))}),
+               separator(), text(translate::to<translate::ENGLISH>(expression)),
+               separator(),
+               hbox({text(" APL:" + translate::to<translate::APL>(expression)) |
+                         flex,
+                     separator(),
+                     text(" J:" + translate::to<translate::J>(expression)) |
+                         flex,
+                     separator(),
+                     text(" BQN:" + translate::to<translate::BQN>(expression)) |
+                         flex})}) |
+             border,
          hbox({
              trace_window() | flex,
              train_tree_window() | flex,
