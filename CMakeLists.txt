@@ -5,8 +5,8 @@ include(FetchContent)
 
 set(FETCHCONTENT_UPDATES_DISCONNECTED TRUE)
 FetchContent_Declare(ftxui
-  GIT_REPOSITORY https://github.com/ArthurSonzogni/ftxui
-  GIT_TAG v3.0.0
+  GIT_REPOSITORY https://github.com/codereport/ftxui
+  # GIT_TAG v3.0.0
 )
 
 FetchContent_GetProperties(ftxui)
@@ -14,6 +14,8 @@ if(NOT ftxui_POPULATED)
   FetchContent_Populate(ftxui)
   add_subdirectory(${ftxui_SOURCE_DIR} ${ftxui_BINARY_DIR} EXCLUDE_FROM_ALL)
 endif()
+
+# --- Fetch utfcpp --------------------------------------------------------------
 
 FetchContent_Declare(utfcpp
   GIT_REPOSITORY https://github.com/nemtrif/utfcpp
@@ -25,6 +27,21 @@ if(NOT utfcpp_POPULATED)
   FetchContent_Populate(utfcpp)
   add_subdirectory(${utfcpp_SOURCE_DIR} ${utfcpp_BINARY_DIR} EXCLUDE_FROM_ALL)
 endif()
+
+# --- Fetch range-v3 ------------------------------------------------------------
+
+FetchContent_Declare(range-v3
+  GIT_REPOSITORY https://github.com/ericniebler/range-v3
+  # GIT_TAG v0.12.0
+)
+
+FetchContent_GetProperties(range-v3)
+if(NOT range-v3_POPULATED)
+  FetchContent_Populate(range-v3)
+  add_subdirectory(${range-v3_SOURCE_DIR} ${range-v3_BINARY_DIR} EXCLUDE_FROM_ALL)
+endif()
+
+FetchContent_MakeAvailable(range-v3)
 
 # ------------------------------------------------------------------------------
 
@@ -42,6 +59,7 @@ target_include_directories(mex PRIVATE src)
 include_directories(${utfcpp_SOURCE_DIR}/source)
 
 target_link_libraries(mex
+  PRIVATE range-v3
   PRIVATE ftxui::screen
   PRIVATE ftxui::dom
   PRIVATE ftxui::component # Not needed for this example.
