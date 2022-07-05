@@ -15,6 +15,17 @@ if(NOT ftxui_POPULATED)
   add_subdirectory(${ftxui_SOURCE_DIR} ${ftxui_BINARY_DIR} EXCLUDE_FROM_ALL)
 endif()
 
+FetchContent_Declare(utfcpp
+  GIT_REPOSITORY https://github.com/nemtrif/utfcpp
+  GIT_TAG v3.2.1
+)
+
+FetchContent_GetProperties(utfcpp)
+if(NOT utfcpp_POPULATED)
+  FetchContent_Populate(utfcpp)
+  add_subdirectory(${utfcpp_SOURCE_DIR} ${utfcpp_BINARY_DIR} EXCLUDE_FROM_ALL)
+endif()
+
 # ------------------------------------------------------------------------------
 
 project(mex
@@ -28,6 +39,7 @@ endif()
 
 add_executable(mex src/main.cpp)
 target_include_directories(mex PRIVATE src)
+include_directories(${utfcpp_SOURCE_DIR}/source)
 
 target_link_libraries(mex
   PRIVATE ftxui::screen
