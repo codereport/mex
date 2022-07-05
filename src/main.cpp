@@ -1,7 +1,8 @@
 
 #include <memory>  // for allocator, __shared_ptr_access
-#include <string>  // for char_traits, operator+, string, basic_string
 #include <optional>
+#include <string>  // for char_traits, operator+, string, basic_string
+#include <unordered_map>
 
 #include "ftxui/component/captured_mouse.hpp"  // for ftxui
 #include "ftxui/component/component.hpp"       // for Input, Renderer, Vertical
@@ -11,7 +12,28 @@
 #include "ftxui/dom/elements.hpp"  // for text, hbox, separator, Element, operator|, vbox, border
 #include "ftxui/util/ref.hpp"  // for Ref
 
+#include "utf8.h"
+
 using namespace std::string_literals;
+
+auto to_english = std::unordered_map<wchar_t, std::string>{
+  {L'⍳',  "iota"s}, 
+  {L'/',  "fold"s},
+  {L'\\', "scan"s},
+  {L'⌈',  "max"s},
+  {L'⊢',  "id"s}};
+
+auto translate(std::string expr) -> std::string {
+  auto u16 = utf8::utf8to16(expr);
+  std::string ret = " ";
+  for (auto c : u16) {
+    ret += to_english.find(c) != to_english.end()
+               ? to_english[c]
+               : std::string{static_cast<char>(c)};
+    ret += ' ';
+  }
+  return ret;
+}
 
 int main(int argc, const char* argv[]) {
   using namespace ftxui;
@@ -52,7 +74,7 @@ int main(int argc, const char* argv[]) {
                    text("e") | bold | color(Color::RGB(190, 45, 125)),
                    text("X ") | bold | color(Color::RGB(220, 153, 50))}),
              separator(),
-             text(" translation"),
+             text(translate(expression)),
          }) | border,
          hbox({
              trace_window() | flex,
