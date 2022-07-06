@@ -43,6 +43,19 @@ endif()
 
 FetchContent_MakeAvailable(range-v3)
 
+# --- Fetch blackbird --------------------------------------------------------------
+
+FetchContent_Declare(blackbird
+  GIT_REPOSITORY https://github.com/codereport/blackbird
+  GIT_TAG main
+)
+
+FetchContent_GetProperties(blackbird)
+if(NOT blackbird_POPULATED)
+  FetchContent_Populate(blackbird)
+  add_subdirectory(${blackbird_SOURCE_DIR} ${blackbird_BINARY_DIR} EXCLUDE_FROM_ALL)
+endif()
+
 # ------------------------------------------------------------------------------
 
 project(mex
@@ -57,6 +70,7 @@ endif()
 add_executable(mex src/main.cpp)
 target_include_directories(mex PRIVATE src)
 include_directories(${utfcpp_SOURCE_DIR}/source)
+include_directories(${blackbird_SOURCE_DIR})
 
 target_link_libraries(mex
   PRIVATE range-v3
