@@ -68,6 +68,7 @@ if (NOT CMAKE_CUDA_COMPILER)
 endif()
 
 add_executable(mex src/main.cpp)
+set_property(TARGET mex PROPERTY CXX_STANDARD 20)
 target_include_directories(mex PRIVATE src)
 include_directories(${utfcpp_SOURCE_DIR}/source)
 include_directories(${blackbird_SOURCE_DIR})

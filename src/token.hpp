@@ -60,7 +60,7 @@ class token {
     // TODO: figure out whether we need to split this
     // (so that it isn't used for printing tensors)
     [[nodiscard]] auto u16string_value() const {
-        if (_type == token_t::ARRAY) return utf8::utf8to16(tensor_value().string());
+        if (_type == token_t::ARRAY) return utf8::utf8to16(to_string(tensor_value()));
         return std::get<std::u16string>(_value);
     }
 };

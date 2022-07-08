@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include <span>
 #include <string>
 #include <vector>
 
@@ -11,6 +12,18 @@
 using namespace std::string_literals;
 
 namespace rv = ranges::views;
+
+template <typename T>
+auto to_string(T t) {
+    if (t.rank() == 1) {
+        return t.data()                                                   //
+               | rv::transform([](auto e) { return std::to_string(e); })  //
+               | rv::join(' ')                                            //
+               | ranges::to<std::string>;
+    }
+    // TODO: use fmt for this
+    return "tensor::string() not implemented for rank"s + std::to_string(t.rank());
+}
 
 template <typename T>
 class tensor {
@@ -29,15 +42,5 @@ class tensor {
 
     [[nodiscard]] auto shape() const { return _shape; }
     [[nodiscard]] auto rank() const { return _shape.size(); };
-    [[nodiscard]] auto data() const { return _data; };
-    [[nodiscard]] auto string() const {
-        if (rank() == 1) {
-            return _data                                                      //
-                   | rv::transform([](auto e) { return std::to_string(e); })  //
-                   | rv::join(' ')                                            //
-                   | ranges::to<std::string>;
-        }
-        // TODO: use fmt for this
-        return "tensor::string() not implemented for rank"s + std::to_string(rank());
-    }
+    [[nodiscard]] auto data() -> std::span<T> { return _data; };
 };
