@@ -9,11 +9,12 @@
 
 using namespace std::string_literals;
 
-enum class error_type { NOT_IMPLEMENTED_YET, RANK, SHAPE, DOMAIN };
+enum class error_type { NOT_IMPLEMENTED_YET, ARITY, RANK, SHAPE, DOMAIN };
 
 auto to_string(error_type e) {
     switch (e) {
         case error_type::NOT_IMPLEMENTED_YET: return "not implemented yet"s;
+        case error_type::ARITY: return "arity error"s;
         case error_type::RANK: return "rank error"s;
         case error_type::SHAPE: return "shape error"s;
         case error_type::DOMAIN: return "domain error"s;

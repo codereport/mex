@@ -35,8 +35,9 @@ auto eval_single_step(std::vector<token> tokens) -> expected_tokens {
     } else if (is_binary_function(tokens.back())) {
         auto const fun = tokens.back();
         tokens.pop_back();
+        if (tokens.empty()) { return make_tokens_error(error_type::ARITY, "binary function expects left argument"); }
         if (tokens.back().type() != token_t::ARRAY) {
-            return make_tokens_error(error_type::DOMAIN, "binary function left argument should be tensor");
+            return make_tokens_error(error_type::DOMAIN, "binary function left argument should be an array");
         }
         auto const new_arr = eval_binary_function(fun, tokens.back().tensor_value(), arr);
         tokens.pop_back();
