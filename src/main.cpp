@@ -39,21 +39,28 @@ int main(int argc, const char* argv[]) {
 
     auto join = [](auto tokens) {
         std::u16string ret;
-        for (auto const& tok : tokens) ret += tok.u16string_value();
+        for (auto const& tok : tokens) ret += tok.u16string_value();  // + utf8::utf8to16(" | ");
         return " " + utf8::utf16to8(ret);
     };
 
     auto trace_window = [&] {
         auto trace = std::vector<std::vector<token>>{tokenize(expression)};
+        auto e     = std::optional<error_msg>{};
 
         while (trace.back().size() > 1) {
-            auto tokens = eval_single_step(trace.back());
-            trace.push_back(tokens);
+            auto exp_tokens = eval_single_step(trace.back());
+            if (not exp_tokens.has_value()) {
+                e = exp_tokens.error().value();
+                break;
+            }
+            trace.push_back(exp_tokens.value());
         }
 
         auto elems = trace                                                             //
                      | rv::transform([&](auto t) { return text(rpad(join(t), 30)); })  //
                      | ranges::to<Elements>;
+
+        if (e.has_value()) elems.push_back(text("   " + e.value().string()));
 
         auto content = vbox(elems);
         return window(text(L" Trace "), content);
