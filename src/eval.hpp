@@ -9,6 +9,7 @@
 
 auto eval_unary_function(token function, tensor<int> array) -> tensor<int> {
     if (function.u16string_value() == utf8::utf8to16("⍳")) return unary_iota(array);
+    if (function.u16string_value() == utf8::utf8to16("⌽")) return unary_reverse(array);
     // add tl::expected for "not supported error"
     return tensor<int>{};
 }
