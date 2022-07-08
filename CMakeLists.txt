@@ -56,6 +56,19 @@ if(NOT blackbird_POPULATED)
   add_subdirectory(${blackbird_SOURCE_DIR} ${blackbird_BINARY_DIR} EXCLUDE_FROM_ALL)
 endif()
 
+# --- Fetch tl::expected -----------------------------------------------------------
+
+FetchContent_Declare(expected
+  GIT_REPOSITORY https://github.com/TartanLlama/expected
+  GIT_TAG master
+)
+
+FetchContent_GetProperties(expected)
+if(NOT expected_POPULATED)
+  FetchContent_Populate(expected)
+  add_subdirectory(${expected_SOURCE_DIR} ${expected_BINARY_DIR} EXCLUDE_FROM_ALL)
+endif()
+
 # ------------------------------------------------------------------------------
 
 project(mex
@@ -72,6 +85,7 @@ set_property(TARGET mex PROPERTY CXX_STANDARD 20)
 target_include_directories(mex PRIVATE src)
 include_directories(${utfcpp_SOURCE_DIR}/source)
 include_directories(${blackbird_SOURCE_DIR})
+include_directories(${expected_SOURCE_DIR})
 
 target_link_libraries(mex
   PRIVATE range-v3
