@@ -13,6 +13,12 @@
 #include "ftxui/util/ref.hpp"                      // for Ref
 
 #include <range/v3/range/conversion.hpp>
+#include <range/v3/view/drop.hpp>
+#include <range/v3/view/join.hpp>
+#include <range/v3/view/partial_sum.hpp>
+#include <range/v3/view/split.hpp>
+#include <range/v3/view/take.hpp>
+#include <range/v3/view/take_while.hpp>
 #include <range/v3/view/transform.hpp>
 
 #include <utf8.h>
@@ -43,6 +49,15 @@ int main(int argc, const char* argv[]) {
         return " " + utf8::utf16to8(ret);
     };
 
+    auto format_error_msg = [](auto s) {
+        auto const words = s | rv::split(' ');
+        auto const psums = words | rv::transform(ranges::distance) | rv::partial_sum | rv::take_while(_lt(30));
+        auto const n     = ranges::distance(psums);
+        auto const l     = words | rv::take(n) | rv::join(' ') | ranges::to<std::string>;
+        auto const r     = words | rv::drop(n) | rv::join(' ') | ranges::to<std::string>;
+        return std::pair{l, r};
+    };
+
     auto trace_window = [&] {
         auto trace = std::vector<std::vector<token>>{tokenize(expression)};
         auto e     = std::optional<error_msg>{};
@@ -57,10 +72,17 @@ int main(int argc, const char* argv[]) {
         }
 
         auto elems = trace                                                             //
-                     | rv::transform([&](auto t) { return text(rpad(join(t), 30)); })  //
+                     | rv::transform([&](auto t) { return text(rpad(join(t), 35)); })  //
                      | ranges::to<Elements>;
 
-        if (e.has_value()) elems.push_back(text("   " + e.value().string()));
+        if (e.has_value()) {
+            auto rest = e.value().string();
+            auto line = ""s;
+            while (not rest.empty()) {
+                std::tie(line, rest) = format_error_msg(rest);
+                elems.push_back(text("   " + line));
+            }
+        }
 
         auto content = vbox(elems);
         return window(text(L" Trace "), content);
