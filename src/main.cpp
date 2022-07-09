@@ -91,8 +91,8 @@ int main(int argc, const char* argv[]) {
     auto train_tree_window = [&] {
         auto const blank_line = text("\n"s);
 
-        auto elems = Elements(12, blank_line);
-        elems[0]   = text(rpad(" TODO"s, 30));
+        auto elems = Elements(15, blank_line);
+        elems[0]   = text(rpad(" TODO"s, 35));
 
         auto const content = vbox(elems);
         return window(text(L" Combinator Tree "), content);

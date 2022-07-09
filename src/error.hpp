@@ -36,3 +36,9 @@ using expected_tokens = tl::expected<std::vector<token>, error>;
 auto make_tokens_error(error_type e, std::string msg) {
     return expected_tokens{tl::unexpect, error{error_msg{e, msg}}};
 }
+
+auto make_tokens_error(error_msg e) { return expected_tokens{tl::unexpect, error{e}}; }
+
+auto make_tensor_error(error_type e, std::string msg) {
+    return expected_tensor{tl::unexpect, error{error_msg{e, msg}}};
+}

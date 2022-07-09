@@ -15,6 +15,7 @@ namespace rv = ranges::views;
 
 template <typename T>
 auto to_string(T t) {
+    if (t.rank() == 0) { return std::to_string(t.data().front()); }
     if (t.rank() == 1) {
         return t.data()                                                   //
                | rv::transform([](auto e) { return std::to_string(e); })  //
@@ -22,7 +23,7 @@ auto to_string(T t) {
                | ranges::to<std::string>;
     }
     // TODO: use fmt for this
-    return "tensor::string() not implemented for rank"s + std::to_string(t.rank());
+    return "tensor::string() not implemented for rank "s + std::to_string(t.rank());
 }
 
 template <typename T>
@@ -35,10 +36,10 @@ class tensor {
     tensor() : _data{}, _shape{{0}} {}
 
     // Ctor for rank-0 array from T
-    tensor(T data) : _data{data}, _shape{{}} {}
+    tensor(T data) : _data{data}, _shape{} {}
 
     // Ctor for rank-1 array from std::vector
-    tensor(std::vector<T> data) : _data{data}, _shape{{1}} {}
+    tensor(std::vector<T> data) : _data{data}, _shape{{static_cast<int32_t>(_data.size())}} {}
 
     [[nodiscard]] auto shape() const { return _shape; }
     [[nodiscard]] auto rank() const { return _shape.size(); };

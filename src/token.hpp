@@ -38,7 +38,7 @@ auto to_tensor(std::u16string str) -> tensor<int> {
     auto const vec = temp                                                                  //
                      | rv::transform([](auto i) { return std::stoi(utf8::utf16to8(i)); })  //
                      | ranges::to<std::vector<int>>;
-    return tensor{vec};
+    return vec.size() == 1 ? tensor{vec.front()} : tensor{vec};
 }
 
 using token_variant = std::variant<std::u16string, tensor<int>>;
