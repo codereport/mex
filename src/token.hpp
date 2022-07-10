@@ -57,8 +57,7 @@ class token {
     [[nodiscard]] auto type() const { return _type; }
     [[nodiscard]] auto tensor_value() const -> tensor<int> { return std::get<tensor<int>>(_value); }
 
-    // TODO: figure out whether we need to split this
-    // (so that it isn't used for printing tensors)
+    // TODO: figure out whether we need to split this (so that it isn't used for printing tensors)
     [[nodiscard]] auto u16string_value() const {
         if (_type == token_t::ARRAY) return utf8::utf8to16(to_string(tensor_value()));
         return std::get<std::u16string>(_value);
