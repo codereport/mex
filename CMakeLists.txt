@@ -69,6 +69,19 @@ if(NOT expected_POPULATED)
   add_subdirectory(${expected_SOURCE_DIR} ${expected_BINARY_DIR} EXCLUDE_FROM_ALL)
 endif()
 
+# --- Fetch ut -----------------------------------------------------------
+
+FetchContent_Declare(ut
+  GIT_REPOSITORY https://github.com/boost-ext/ut
+  GIT_TAG master
+)
+
+FetchContent_GetProperties(ut)
+if(NOT ut_POPULATED)
+  FetchContent_Populate(ut)
+  add_subdirectory(${ut_SOURCE_DIR} ${ut_BINARY_DIR} EXCLUDE_FROM_ALL)
+endif()
+
 # ------------------------------------------------------------------------------
 
 project(mex
@@ -91,8 +104,11 @@ target_link_libraries(mex
   PRIVATE range-v3
   PRIVATE ftxui::screen
   PRIVATE ftxui::dom
-  PRIVATE ftxui::component # Not needed for this example.
+  PRIVATE ftxui::component
 )
+
+add_executable(tests tests/tests.cpp)
+target_link_libraries(tests PRIVATE ut)
 
 if (EMSCRIPTEN) 
   string(APPEND CMAKE_CXX_FLAGS " -s USE_PTHREADS") 
