@@ -109,6 +109,8 @@ target_link_libraries(mex
 
 add_executable(tests tests/tests.cpp)
 target_link_libraries(tests PRIVATE ut)
+target_include_directories(tests PRIVATE src)
+target_link_libraries(tests PRIVATE range-v3)
 
 if (EMSCRIPTEN) 
   string(APPEND CMAKE_CXX_FLAGS " -s USE_PTHREADS") 

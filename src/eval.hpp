@@ -8,6 +8,7 @@
 #include <functions_binary.hpp>
 #include <functions_unary.hpp>
 #include <token.hpp>
+#include <tokenize.hpp>
 
 auto eval_unary_function(token function, tensor<int> t) -> expected_tensor {
     if (function.u16string_value() == utf8::utf8to16("⍳")) return unary_iota(t);
@@ -50,4 +51,14 @@ auto eval_single_step(std::vector<token> tokens) -> expected_tokens {
         return make_tokens_error(error_type::DOMAIN, "function or operator expected left of array");
     }
     return tokens;
+}
+
+auto eval(std::string expression) -> tensor<int> {
+    auto tokens = tokenize(expression);
+    while (tokens.size() > 1) {
+        auto exp_tokens = eval_single_step(tokens);
+        if (not exp_tokens.has_value()) break;
+        tokens = exp_tokens.value();
+    }
+    return tokens.front().tensor_value();
 }
