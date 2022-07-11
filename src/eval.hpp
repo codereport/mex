@@ -18,6 +18,8 @@ auto eval_unary_function(token function, tensor<int> t) -> expected_tensor {
 
 auto eval_binary_function(token function, tensor<int> l, tensor<int> r) -> expected_tensor {
     if (function.u16string_value() == utf8::utf8to16("+")) return binary_plus(l, r);
+    if (function.u16string_value() == utf8::utf8to16("×")) return binary_multiply(l, r);
+    if (function.u16string_value() == utf8::utf8to16("-")) return binary_minus(l, r);
     // TODO: add tl::expected for "not supported error"
     return tensor<int>{};
 }
