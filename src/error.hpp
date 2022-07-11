@@ -4,25 +4,28 @@
 #include <string>
 #include <vector>
 
-#include <include/tl/expected.hpp>
+#include <tl/expected.hpp>
 
 #include <tensor.hpp>
 #include <token.hpp>
 
 using namespace std::string_literals;
 
-enum class error_type { NOT_IMPLEMENTED_YET, ARITY, RANK, SHAPE, DOMAIN };
+enum class error_type { NOT_IMPLEMENTED_YET, ARITY, RANK, SHAPE, DOMAIN, SYNTAX };
 
+// clang-format off
 auto to_string(error_type e) {
     switch (e) {
         case error_type::NOT_IMPLEMENTED_YET: return "not implemented yet"s;
-        case error_type::ARITY: return "arity error"s;
-        case error_type::RANK: return "rank error"s;
-        case error_type::SHAPE: return "shape error"s;
-        case error_type::DOMAIN: return "domain error"s;
+        case error_type::ARITY:               return "arity error"s;
+        case error_type::RANK:                return "rank error"s;
+        case error_type::SHAPE:               return "shape error"s;
+        case error_type::DOMAIN:              return "domain error"s;
+        case error_type::SYNTAX:              return "syntax error"s;
     }
     return "unhandled error"s;
 }
+// clang-format on
 
 struct error_msg {
     error_type err;

@@ -12,16 +12,14 @@
 auto eval_unary_function(token function, tensor<int> t) -> expected_tensor {
     if (function.u16string_value() == utf8::utf8to16("⍳")) return unary_iota(t);
     if (function.u16string_value() == utf8::utf8to16("⌽")) return unary_reverse(t);
-    // TODO: add tl::expected for "not supported error"
-    return tensor<int>{};
+    return make_tensor_error(error_type::SYNTAX, "unrecognized unary function");
 }
 
 auto eval_binary_function(token function, tensor<int> l, tensor<int> r) -> expected_tensor {
     if (function.u16string_value() == utf8::utf8to16("+")) return binary_plus(l, r);
     if (function.u16string_value() == utf8::utf8to16("×")) return binary_multiply(l, r);
     if (function.u16string_value() == utf8::utf8to16("-")) return binary_minus(l, r);
-    // TODO: add tl::expected for "not supported error"
-    return tensor<int>{};
+    return make_tensor_error(error_type::SYNTAX, "unrecognized binary function");
 }
 
 auto eval_single_step(std::vector<token> tokens) -> expected_tokens {
