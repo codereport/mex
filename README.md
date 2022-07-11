@@ -27,5 +27,6 @@
 * ericniebler/[range-v3](https://github.com/ericniebler/range-v3)
 * nemtrif/[utfcpp](https://github.com/nemtrif/utfcpp)
 * TartanLlama/[expected](https://github.com/TartanLlama/expected)
+  * GCC 12.1 has support for `std::expected` and we will switch to that at some point
 * codereport/[blackbird](https://github.com/codereport/blackbird)
 * boost-ext/[ut](https://github.com/boost-ext/ut)

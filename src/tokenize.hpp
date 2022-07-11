@@ -22,15 +22,13 @@ auto tokenize(std::string expr) {
     auto padded_expr       = utf8::utf8to16(" " + expr + " ");
     auto necessary_chars   = [](auto rng) { return rng[1] != ' ' or _psi(_and_, ::isdigit)(rng[0], rng[2]); };
     auto is_digit_or_space = _phi(::isdigit, _or_, _eq(' '));
+    auto range_to_token    = [](auto r) { return token{std::u16string(r.begin(), r.end())}; };
 
-    auto temp = padded_expr                                       //
-                | rv::sliding(3)                                  //
-                | rv::filter(necessary_chars)                     //
-                | rv::transform([](auto rng) { return rng[1]; })  //
-                | rv::chunk_by(_psi(_and_, is_digit_or_space))    //
-                | ranges::to<std::vector<std::u16string>>;
-
-    return temp                                              //
-           | rv::transform([](auto s) { return token{s}; })  //
+    return padded_expr                                       //
+           | rv::sliding(3)                                  //
+           | rv::filter(necessary_chars)                     //
+           | rv::transform([](auto rng) { return rng[1]; })  //
+           | rv::chunk_by(_psi(_and_, is_digit_or_space))    //
+           | rv::transform(range_to_token)                   //
            | ranges::to<std::vector<token>>;
 }
