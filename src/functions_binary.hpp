@@ -5,6 +5,7 @@
 #include <utf8.h>
 
 #include <combinators.hpp>
+#include <error.hpp>
 #include <token.hpp>
 
 using namespace combinators;
@@ -14,9 +15,11 @@ auto is_binary_function(token function) -> bool {
     return val == utf8::utf8to16("+") or val == utf8::utf8to16("×") or val == utf8::utf8to16("÷");
 }
 
-auto binary_plus(tensor<int> l, tensor<int> r) -> tensor<int> {
+auto binary_plus(tensor<int> l, tensor<int> r) -> expected_tensor {
     if (l.rank() != 0) {
-        // TODO: rank not supported with std::expected
+        return make_tensor_error(
+          error_type::NOT_IMPLEMENTED_YET,
+          "binary + with left argument with rank != 0, rank currently " + std::to_string(l.rank()));
     }
     auto const val = l.data().front();
     return tensor{r.data() | rv::transform(_plus(val)) | ranges::to<std::vector>};

@@ -12,13 +12,13 @@
 auto eval_unary_function(token function, tensor<int> t) -> expected_tensor {
     if (function.u16string_value() == utf8::utf8to16("⍳")) return unary_iota(t);
     if (function.u16string_value() == utf8::utf8to16("⌽")) return unary_reverse(t);
-    // add tl::expected for "not supported error"
+    // TODO: add tl::expected for "not supported error"
     return tensor<int>{};
 }
 
-auto eval_binary_function(token function, tensor<int> l, tensor<int> r) -> tensor<int> {
+auto eval_binary_function(token function, tensor<int> l, tensor<int> r) -> expected_tensor {
     if (function.u16string_value() == utf8::utf8to16("+")) return binary_plus(l, r);
-    // add tl::expected for "not supported error"
+    // TODO: add tl::expected for "not supported error"
     return tensor<int>{};
 }
 
@@ -42,9 +42,10 @@ auto eval_single_step(std::vector<token> tokens) -> expected_tokens {
         if (tokens.back().type() != token_t::ARRAY) {
             return make_tokens_error(error_type::DOMAIN, "binary function left argument should be an array");
         }
-        auto const new_arr = eval_binary_function(fun, tokens.back().tensor_value(), arr);
+        auto const exp_new_arr = eval_binary_function(fun, tokens.back().tensor_value(), arr);
+        if (not exp_new_arr.has_value()) { return make_tokens_error(exp_new_arr.error().value()); }
         tokens.pop_back();
-        tokens.push_back(token{new_arr});
+        tokens.push_back(token{exp_new_arr.value()});
     } else {
         return make_tokens_error(error_type::DOMAIN, "function or operator expected left of array");
     }
