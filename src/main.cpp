@@ -28,10 +28,14 @@
 #include <translate.hpp>
 
 using namespace std::string_literals;
+using namespace ftxui;
+
+ftxui::Decorator const J_BLUE      = bgcolor(Color::RGB(2, 198, 245));
+ftxui::Decorator const J_BLUE_DARK = bgcolor(Color::RGB(3, 155, 204));
+ftxui::Decorator const APL_GREEN   = bgcolor(Color::RGB(36, 160, 72));
+ftxui::Decorator const BQN_GREEN   = bgcolor(Color::RGB(43, 112, 102));
 
 int main(int argc, const char* argv[]) {
-    using namespace ftxui;
-
     std::string expression;
 
     Component input = Input(&expression, "Enter expression...");
@@ -71,8 +75,10 @@ int main(int argc, const char* argv[]) {
             trace.push_back(exp_tokens.value());
         }
 
-        auto elems = trace                                                             //
-                     | rv::transform([&](auto t) { return text(rpad(join(t), 35)); })  //
+        auto elems = trace  //
+                     | rv::transform([&, b = false](auto t) mutable {
+                           return text(rpad(join(t), 35)) | (bgcolor((b = !b) ? Color::Black : Color::GrayDark));
+                       })  //
                      | ranges::to<Elements>;
 
         if (e.has_value()) {
@@ -85,7 +91,7 @@ int main(int argc, const char* argv[]) {
         }
 
         auto content = vbox(elems);
-        return window(text(L" Trace "), content);
+        return window(text(L" Trace ") | bold, content);
     };
 
     auto train_tree_window = [&] {
@@ -95,7 +101,7 @@ int main(int argc, const char* argv[]) {
         elems[0]   = text(rpad(" TODO"s, 35));
 
         auto const content = vbox(elems);
-        return window(text(L" Combinator Tree "), content);
+        return window(text(L" Combinator Tree ") | bold, content);
     };
 
     auto renderer = Renderer(component, [&] {
@@ -106,11 +112,11 @@ int main(int argc, const char* argv[]) {
                            separator(),
                            text(translate::to<translate::ENGLISH>(expression)),
                            separator(),
-                           hbox({text(" APL:" + translate::to<translate::APL>(expression)) | flex,
+                           hbox({text(" APL:" + translate::to<translate::APL>(expression)) | APL_GREEN | flex,
                                  separator(),
-                                 text(" J:" + translate::to<translate::J>(expression)) | flex,
+                                 text(" J:" + translate::to<translate::J>(expression)) | J_BLUE_DARK | flex,
                                  separator(),
-                                 text(" BQN:" + translate::to<translate::BQN>(expression)) | flex})}) |
+                                 text(" BQN:" + translate::to<translate::BQN>(expression)) | BQN_GREEN | flex})}) |
                        border,
                      hbox({
                        trace_window() | flex,
