@@ -9,6 +9,8 @@
 #include <range/v3/view/join.hpp>
 #include <range/v3/view/transform.hpp>
 
+#include <fmt/core.h>
+
 using namespace std::string_literals;
 
 namespace rv = ranges::views;
@@ -22,8 +24,7 @@ auto to_string(T t) {
                | rv::join(' ')                                            //
                | ranges::to<std::string>;
     }
-    // TODO: use fmt for this
-    return "tensor::string() not implemented for rank "s + std::to_string(t.rank());
+    return fmt::format("tensor::string() not implemented for rank {}", t.rank());
 }
 
 template <typename T>

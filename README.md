@@ -30,3 +30,4 @@
   * GCC 12.1 has support for `std::expected` and we will switch to that at some point
 * codereport/[blackbird](https://github.com/codereport/blackbird)
 * boost-ext/[ut](https://github.com/boost-ext/ut)
+* fmtlib/[fmt](https://github.com/fmtlib/fmt)

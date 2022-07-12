@@ -82,6 +82,20 @@ if(NOT ut_POPULATED)
   add_subdirectory(${ut_SOURCE_DIR} ${ut_BINARY_DIR} EXCLUDE_FROM_ALL)
 endif()
 
+# --- Fetch fmt -----------------------------------------------------------
+
+FetchContent_Declare(fmt
+  GIT_REPOSITORY https://github.com/fmtlib/fmt
+  GIT_TAG 9.0.0
+)
+
+FetchContent_GetProperties(fmt)
+if(NOT fmt_POPULATED)
+  FetchContent_Populate(fmt)
+  add_subdirectory(${fmt_SOURCE_DIR} ${fmt_BINARY_DIR} EXCLUDE_FROM_ALL)
+endif()
+
+
 # ------------------------------------------------------------------------------
 
 project(mex
@@ -102,13 +116,16 @@ include_directories(${expected_SOURCE_DIR}/include)
 
 target_link_libraries(mex
   PRIVATE range-v3
+  PRIVATE fmt
   PRIVATE ftxui::screen
   PRIVATE ftxui::dom
   PRIVATE ftxui::component
 )
 
 add_executable(tests tests/tests.cpp)
-target_link_libraries(tests PRIVATE ut)
+target_link_libraries(tests
+  PRIVATE ut
+  PRIVATE fmt)
 target_include_directories(tests PRIVATE src)
 target_link_libraries(tests PRIVATE range-v3)
 
