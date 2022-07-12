@@ -33,14 +33,10 @@ class tensor {
     std::vector<T> _data;
 
    public:
-    // Default ctor for rank-1 array from T
-    tensor() : _data{}, _shape(1, 0) {}
-
-    // Ctor for rank-0 array from T
-    tensor(T data) : _data{data}, _shape{} {}
-
-    // Ctor for rank-1 array from std::vector
-    tensor(std::vector<T> data) : _data{data}, _shape(1, data.size()) {}
+    tensor() : _data{}, _shape(1, 0) {}                                        // Default ctor for rank-1 array from T
+    tensor(T data) : _data{data}, _shape{} {}                                  // Ctor for rank-0 array from T
+    tensor(std::vector<T> data) : _data{data}, _shape(1, data.size()) {}       // Ctor for rank-1 array from std::vector
+    tensor(std::vector<T> d, std::vector<int32_t> s) : _data{d}, _shape(s) {}  // Ctor for rank-1 array from std::vector
 
     [[nodiscard]] auto shape() const { return _shape; }
     [[nodiscard]] auto rank() const { return _shape.size(); };
