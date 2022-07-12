@@ -20,6 +20,7 @@ auto eval_binary_function(token function, tensor<int> l, tensor<int> r) -> expec
     if (function.u16string_value() == utf8::utf8to16("+")) return binary_plus(l, r);
     if (function.u16string_value() == utf8::utf8to16("×")) return binary_multiply(l, r);
     if (function.u16string_value() == utf8::utf8to16("-")) return binary_minus(l, r);
+    if (function.u16string_value() == utf8::utf8to16("⍴")) return binary_reshape(l, r);
     return make_tensor_error(error_type::SYNTAX, "unrecognized binary function");
 }
 
