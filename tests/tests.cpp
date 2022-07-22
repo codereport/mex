@@ -23,6 +23,13 @@ auto main() -> int {
             expect(eval("⍳10") == eval("1 2 3 4 5 6 7 8 9 10"));
         };
 
+        "length"_test = [] {
+            expect(eval("#⍳3") == eval("3"));
+            expect(eval("#1 2 3 4 5") == eval("5"));
+            expect(eval("#10") == eval("1"));
+            expect(eval("#⍳0") == eval("0"));
+        };
+
         "reverse"_test = [] {
             expect(eval("⌽1 2 3") == eval("3 2 1"));
             expect(eval("⌽1 2 3") == eval("⌽⌽3 2 1"));
