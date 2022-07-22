@@ -19,7 +19,7 @@ static constexpr lang_t ENGLISH = 4;
 
 // clang-format off
 static constexpr std::
-    array<std::tuple<char32_t, char16_t, std::string_view, char16_t, std::string_view>, 8>
+    array<std::tuple<char32_t, char16_t, std::string_view, char16_t, std::string_view>, 9>
         _map = {std::tuple{L'⍳',  L'⍳',  "i.",   L'↕', "iota"    },
                 std::tuple{L'/',  L'/',  "/",    L'´', "reduce"  },
                 std::tuple{L'\\', L'\\', "/\\",  L'`', "scan"    },
@@ -27,7 +27,8 @@ static constexpr std::
                 std::tuple{L'⊢',  L'⊢',  "[",    L'⊢', "id"      },
                 std::tuple{L'⌽',  L'⌽',  "|.",   L'⌽', "reverse" },
                 std::tuple{u'×',  L'×',  "*",    L'×', "*"       },
-                std::tuple{U'⍴',  L'⍴',  "$",    L'⥊', "reshape" }};
+                std::tuple{U'⍴',  L'⍴',  "$",    L'⥊', "reshape" },
+                std::tuple{U'#',  L'≢',  "#",    L'≠', "length" }};
 // clang-format on
 
 auto find(char32_t c) {

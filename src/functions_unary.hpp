@@ -13,7 +13,7 @@
 
 auto is_unary_function(token function) -> bool {
     auto const& val = function.u16string_value();
-    return val == utf8::utf8to16("⍳") or val == utf8::utf8to16("⌽");
+    return val == utf8::utf8to16("⍳") or val == utf8::utf8to16("⌽") or val == utf8::utf8to16("#");
 }
 
 auto unary_iota(tensor<int> t) -> expected_tensor {
@@ -31,4 +31,10 @@ auto unary_reverse(tensor<int> t) -> expected_tensor {
     //   if (array.rank() == 1) {
     auto const copy = t.data();
     return tensor{copy | rv::reverse | ranges::to<std::vector>};
+}
+
+auto unary_length(tensor<int> t) -> expected_tensor {
+    if (t.rank() == 0) return tensor{1};
+    if (t.shape().empty()) return tensor{0};
+    return tensor{t.shape().front()};
 }

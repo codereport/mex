@@ -12,6 +12,7 @@
 
 auto eval_unary_function(token function, tensor<int> t) -> expected_tensor {
     if (function.u16string_value() == utf8::utf8to16("⍳")) return unary_iota(t);
+    if (function.u16string_value() == utf8::utf8to16("#")) return unary_length(t);
     if (function.u16string_value() == utf8::utf8to16("⌽")) return unary_reverse(t);
     return make_tensor_error(error_type::SYNTAX, "unrecognized unary function");
 }
