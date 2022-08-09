@@ -40,7 +40,13 @@ auto to(std::string expr) -> std::string {
     auto u16 = utf8::utf8to32(expr);
     std::u32string ret;
     ret += ' ';
+    auto prev = '?';
     for (auto c : u16) {
+        if constexpr (Lang == translate::ENGLISH) {
+            if (std::isdigit(c) and std::isdigit(prev)) {
+                ret.pop_back();
+            }
+        }
         auto it = find(c);
         if (it != _map.cend()) {
             if constexpr (Lang == translate::J or Lang == translate::ENGLISH) {
@@ -48,9 +54,16 @@ auto to(std::string expr) -> std::string {
             }
             if constexpr (Lang == translate::APL or Lang == translate::BQN) { ret += std::get<Lang>(*it); }
         } else {
+            if (Lang == translate::ENGLISH and c == ' ') {
+                prev = ' ';
+                continue;
+            }
             ret += static_cast<char>(c);
         }
-        if constexpr (Lang == translate::ENGLISH) { ret += ' '; }
+        if constexpr (Lang == translate::ENGLISH) {
+            ret += ' ';
+        }
+        prev = c;
     }
     return utf8::utf32to8(ret);
 }
