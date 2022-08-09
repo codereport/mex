@@ -75,11 +75,35 @@ int main(int argc, const char* argv[]) {
             trace.push_back(exp_tokens.value());
         }
 
-        auto elems = trace  //
-                     | rv::transform([&, b = false](auto t) mutable {
-                           return text(rpad(join(t), 35)) | (bgcolor((b = !b) ? Color::Black : Color::GrayDark));
-                       })  //
-                     | ranges::to<Elements>;
+        // TODO: this code is super hacky, needs to be cleaned up
+        auto elems = Elements{};
+        auto b     = false;
+        auto add = [&] (auto tokens, std::string prefix) {
+            elems.push_back(text(prefix + rpad(join(tokens), 35 - prefix.size())) | bgcolor(b ? Color::Black : Color::GrayDark));
+        };
+        for (auto t : trace) {
+            if (not t.empty() and std::ranges::count(t.back().u16string_value(), '\n')) {
+                auto last = utf8::utf16to8(t.back().u16string_value());
+                t.pop_back();
+
+                // print first row
+                auto first_row = last | rv::split('\n') | rv::take(1) | rv::join | ranges::to<std::string>;
+                int const n = utf8::utf8to16(join(t)).size() - 1;
+                t.push_back(tokenize(first_row).front());
+                add(t, "");
+
+                // print subsequent rows (could require indentation)
+                auto subsequent_rows = last | rv::split('\n') | rv::drop(1) | ranges::to<std::vector<std::string>>;
+                auto indent = std::string(n, ' ');
+                for (auto row : subsequent_rows) {
+                    auto new_trace = std::vector<token>{tokenize(row).front()};
+                    add(new_trace, indent);
+                }
+            } else {
+                add(t, "");
+            }
+            b = !b;
+        }
 
         if (e.has_value()) {
             auto rest = e.value().string();
