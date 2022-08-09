@@ -43,9 +43,7 @@ auto to(std::string expr) -> std::string {
     auto prev = '?';
     for (auto c : u16) {
         if constexpr (Lang == translate::ENGLISH) {
-            if (std::isdigit(c) and std::isdigit(prev)) {
-                ret.pop_back();
-            }
+            if (std::isdigit(c) and std::isdigit(prev)) { ret.pop_back(); }
         }
         auto it = find(c);
         if (it != _map.cend()) {
@@ -60,9 +58,7 @@ auto to(std::string expr) -> std::string {
             }
             ret += static_cast<char>(c);
         }
-        if constexpr (Lang == translate::ENGLISH) {
-            ret += ' ';
-        }
+        if constexpr (Lang == translate::ENGLISH) { ret += ' '; }
         prev = c;
     }
     return utf8::utf32to8(ret);
