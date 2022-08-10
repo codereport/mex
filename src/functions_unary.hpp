@@ -28,9 +28,8 @@ auto unary_iota(tensor<int> t) -> expected_tensor {
 auto unary_reverse(tensor<int> t) -> expected_tensor {
     if (t.rank() > 1) { return make_tensor_error(error_type::NOT_IMPLEMENTED_YET, "reverse on rank > 1"); }
     if (t.rank() == 0) return t;
-    //   if (array.rank() == 1) {
-    auto const copy = t.data();
-    return tensor{copy | rv::reverse | ranges::to<std::vector>};
+    assert(t.rank() == 1);
+    return tensor{t.data() | rv::reverse | ranges::to<std::vector>};
 }
 
 auto unary_length(tensor<int> t) -> expected_tensor {
