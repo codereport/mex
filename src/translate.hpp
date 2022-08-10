@@ -6,7 +6,11 @@
 #include <string>
 #include <string_view>
 
-#include "utf8.h"
+#include <combinators.hpp>
+
+#include <utf8.h>
+
+using namespace combinators;
 
 namespace translate {
 
@@ -43,7 +47,7 @@ auto to(std::string expr) -> std::string {
     auto prev = '?';
     for (auto c : u16) {
         if constexpr (Lang == translate::ENGLISH) {
-            if (std::isdigit(c) and std::isdigit(prev)) { ret.pop_back(); }
+            if (_psi(_and_, ::isdigit)(c, prev)) { ret.pop_back(); }
         }
         auto it = find(c);
         if (it != _map.cend()) {
