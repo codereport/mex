@@ -1,0 +1,4 @@
+---
+Checks:
+      'modernize-*,
+      -modernize-use-equals-default'
