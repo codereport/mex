@@ -99,7 +99,7 @@ endif()
 # ------------------------------------------------------------------------------
 
 project(mex
-  LANGUAGES CXX CUDA
+  LANGUAGES CXX # CUDA
   VERSION 1.0.0
 )
 
@@ -107,9 +107,9 @@ if (NOT CMAKE_CXX_COMPILER)
     set(CMAKE_CXX_COMPILER "/usr/bin/g++")
 endif()
 
-if (NOT CMAKE_CUDA_COMPILER)
-    set(CMAKE_CUDA_COMPILER "/usr/bin/nvcc")
-endif()
+# if (NOT CMAKE_CUDA_COMPILER)
+#     set(CMAKE_CUDA_COMPILER "/usr/bin/nvcc")
+# endif()
 
 add_executable(mex src/main.cpp)
 set_property(TARGET mex PROPERTY CXX_STANDARD 20)
