@@ -35,7 +35,7 @@ class tensor {
     [[nodiscard]] auto data () const           { return _data;         };
     // clang-format on
 
-    bool operator==(tensor<T> const& t) const { return _data == t.data() && _shape == t.shape(); }
+    auto operator==(tensor<T> const& t) const -> bool { return _data == t.data() && _shape == t.shape(); }
 };
 
 template <typename T>

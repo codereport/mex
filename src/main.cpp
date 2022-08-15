@@ -35,7 +35,7 @@ ftxui::Decorator const J_BLUE_DARK = bgcolor(Color::RGB(3, 155, 204));
 ftxui::Decorator const APL_GREEN   = bgcolor(Color::RGB(36, 160, 72));
 ftxui::Decorator const BQN_GREEN   = bgcolor(Color::RGB(43, 112, 102));
 
-int main(int argc, const char* argv[]) {
+auto main(int argc, const char* argv[]) -> int {
     std::string expression;
 
     Component input = Input(&expression, "Enter expression...");
