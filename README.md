@@ -1,5 +1,5 @@
 <p align="center">
-    <a href="https://github.com/code_report/mex/issues" alt="contributions welcome">
+    <a href="https://github.com/codereport/mex/issues" alt="contributions welcome">
         <img src="https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat" /></a>
     <a href="https://lbesson.mit-license.org/" alt="MIT license">
         <img src="https://img.shields.io/badge/License-MIT-blue.svg" /></a>    
