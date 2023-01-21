@@ -1,4 +1,5 @@
 cmake_minimum_required (VERSION 3.11)
+set(CMAKE_CXX_COMPILER "/opt/gcc-latest/bin/g++")
 
 # --- Fetch FTXUI --------------------------------------------------------------
 include(FetchContent)
@@ -95,6 +96,18 @@ if(NOT fmt_POPULATED)
   add_subdirectory(${fmt_SOURCE_DIR} ${fmt_BINARY_DIR} EXCLUDE_FROM_ALL)
 endif()
 
+# --- Fetch fmt -----------------------------------------------------------
+
+FetchContent_Declare(lambda2
+  GIT_REPOSITORY https://github.com/boostorg/lambda2.git
+  GIT_TAG master
+)
+
+FetchContent_GetProperties(lambda2)
+if(NOT lambda2_POPULATED)
+  FetchContent_Populate(lambda2)
+  add_subdirectory(${lambda2_SOURCE_DIR} ${lambda2_BINARY_DIR} EXCLUDE_FROM_ALL)
+endif()
 
 # ------------------------------------------------------------------------------
 
@@ -103,16 +116,19 @@ project(mex
   VERSION 1.0.0
 )
 
-if (NOT CMAKE_CXX_COMPILER)
-    set(CMAKE_CXX_COMPILER "/usr/bin/g++")
-endif()
+# if (NOT CMAKE_CXX_COMPILER)
+    # set(CMAKE_CXX_COMPILER "/usr/bin/g++")
+# set(CMAKE_CXX_COMPILER "/opt/gcc-latest/bin/g++")
+# endif()
 
 # if (NOT CMAKE_CUDA_COMPILER)
 #     set(CMAKE_CUDA_COMPILER "/usr/bin/nvcc")
 # endif()
 
+
+
 add_executable(mex src/main.cpp)
-set_property(TARGET mex PROPERTY CXX_STANDARD 20)
+set_property(TARGET mex PROPERTY CXX_STANDARD 23)
 target_include_directories(mex PRIVATE src)
 include_directories(${utfcpp_SOURCE_DIR}/source)
 include_directories(${blackbird_SOURCE_DIR})
